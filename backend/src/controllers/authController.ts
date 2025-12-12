@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 import { User } from '../models/User';
 
 const generateToken = (id: string) => {
@@ -37,6 +38,36 @@ export const register = async (req: Request, res: Response): Promise<void> => {
             res.status(400).json({ message: 'Invalid user data' });
         }
     } catch (error) {
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
+export const login = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { username, password } = req.body;
+        console.log("login request", { username, password });
+
+        if (!username || !password) {
+            res.status(400).json({ message: 'Please provide all fields' });
+            return;
+        }
+
+        const user = await User.findOne({ username });
+
+        if (user && (await bcrypt.compare(password, user.password))) {
+            res.json({
+                user: {
+                    _id: user.id,
+                    username: user.username,
+                },
+                token: generateToken(user.id as string),
+            });
+        } else {
+            console.log("Invalid creds");
+            res.status(401).json({ message: 'Invalid credentials' });
+        }
+    } catch (error) {
+        console.error(error);
         res.status(500).json({ message: 'Server Error' });
     }
 };

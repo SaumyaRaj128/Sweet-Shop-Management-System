@@ -53,3 +53,42 @@ describe('POST /api/auth/register', () => {
         expect(res.status).toBe(400);
     });
 });
+
+describe('POST /api/auth/login', () => {
+    beforeEach(async () => {
+        await request(app).post('/api/auth/register').send({
+            username: 'testuser',
+            password: 'password123',
+        });
+    });
+
+    it('should login a user with valid credentials', async () => {
+        const res = await request(app).post('/api/auth/login').send({
+            username: 'testuser',
+            password: 'password123',
+        });
+
+        expect(res.status).toBe(200);
+        expect(res.body).toHaveProperty('token');
+    });
+
+    it('should not login with invalid password', async () => {
+        const res = await request(app).post('/api/auth/login').send({
+            username: 'testuser',
+            password: 'wrongpassword',
+        });
+
+        expect(res.status).toBe(401);
+        expect(res.body).toHaveProperty('message', 'Invalid credentials');
+    });
+
+    it('should not login with non-existent user', async () => {
+        const res = await request(app).post('/api/auth/login').send({
+            username: 'unknown',
+            password: 'password123',
+        });
+
+        expect(res.status).toBe(401);
+        expect(res.body).toHaveProperty('message', 'Invalid credentials');
+    });
+});
