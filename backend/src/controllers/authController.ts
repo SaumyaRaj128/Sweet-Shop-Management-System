@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { User } from '../models/User';
@@ -9,19 +9,19 @@ const generateToken = (id: string) => {
     });
 };
 
-export const register = async (req: Request, res: Response): Promise<void> => {
+export const register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { username, password } = req.body;
 
         if (!username || !password) {
-            res.status(400).json({ message: 'Please provide all fields' });
-            return;
+            res.status(400);
+            throw new Error('Please provide all fields');
         }
 
         const userExists = await User.findOne({ username });
         if (userExists) {
-            res.status(400).json({ message: 'User already exists' });
-            return;
+            res.status(400);
+            throw new Error('User already exists');
         }
 
         const user = await User.create({ username, password });
@@ -31,25 +31,27 @@ export const register = async (req: Request, res: Response): Promise<void> => {
                 user: {
                     _id: user.id,
                     username: user.username,
+                    role: user.role,
                 },
                 token: generateToken(user.id as string),
             });
         } else {
-            res.status(400).json({ message: 'Invalid user data' });
+            res.status(400);
+            throw new Error('Invalid user data');
         }
     } catch (error) {
-        res.status(500).json({ message: 'Server Error' });
+        next(error);
     }
 };
 
-export const login = async (req: Request, res: Response): Promise<void> => {
+export const login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { username, password } = req.body;
-        console.log("login request", { username, password });
+        console.log("login request", { username });
 
         if (!username || !password) {
-            res.status(400).json({ message: 'Please provide all fields' });
-            return;
+            res.status(400);
+            throw new Error('Please provide all fields');
         }
 
         const user = await User.findOne({ username });
@@ -59,15 +61,15 @@ export const login = async (req: Request, res: Response): Promise<void> => {
                 user: {
                     _id: user.id,
                     username: user.username,
+                    role: user.role,
                 },
                 token: generateToken(user.id as string),
             });
         } else {
-            console.log("Invalid creds");
-            res.status(401).json({ message: 'Invalid credentials' });
+            res.status(401);
+            throw new Error('Invalid credentials');
         }
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server Error' });
+        next(error);
     }
 };

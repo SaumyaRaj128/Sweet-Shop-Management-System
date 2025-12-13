@@ -1,5 +1,6 @@
 import express, { Application } from 'express';
 import cors from 'cors';
+import { notFound, errorHandler } from './middleware/errorMiddleware';
 
 const app: Application = express();
 
@@ -10,7 +11,6 @@ import sweetRoutes from './routes/sweetRoutes';
 app.use(express.json());
 app.use(cors());
 
-
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/sweets', sweetRoutes);
@@ -18,5 +18,9 @@ app.use('/api/sweets', sweetRoutes);
 app.get('/', (req, res) => {
     res.send('Sweet Shop API is running...');
 });
+
+// Error Middleware
+app.use(notFound);
+app.use(errorHandler);
 
 export default app;

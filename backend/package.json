@@ -9,8 +9,8 @@
     "build": "tsc",
     "lint": "eslint src/**/*.ts",
     "format": "prettier --write src/**/*.ts",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "jest --runInBand --detectOpenHandles",
+    "test:watch": "jest --watch --runInBand"
   },
   "keywords": [],
   "author": "",

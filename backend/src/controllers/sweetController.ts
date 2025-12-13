@@ -1,22 +1,22 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { Sweet } from '../models/Sweet';
 
 // @desc    Get all sweets
 // @route   GET /api/sweets
 // @access  Protected
-export const getSweets = async (req: Request, res: Response) => {
+export const getSweets = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const sweets = await Sweet.find({});
         res.json(sweets);
     } catch (error) {
-        res.status(500).json({ message: 'Server Error' });
+        next(error);
     }
 };
 
 // @desc    Search sweets
 // @route   GET /api/sweets/search
 // @access  Protected
-export const searchSweets = async (req: Request, res: Response) => {
+export const searchSweets = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { q, category, minPrice, maxPrice } = req.query;
         let query: any = {};
@@ -36,27 +36,28 @@ export const searchSweets = async (req: Request, res: Response) => {
         const sweets = await Sweet.find(query);
         res.json(sweets);
     } catch (error) {
-        res.status(500).json({ message: 'Server Error' });
+        next(error);
     }
 };
 
 // @desc    Create a sweet
 // @route   POST /api/sweets
 // @access  Protected
-export const createSweet = async (req: Request, res: Response) => {
+export const createSweet = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { name, category, price, quantity } = req.body;
         const sweet = await Sweet.create({ name, category, price, quantity });
         res.status(201).json(sweet);
     } catch (error) {
-        res.status(400).json({ message: 'Invalid data' });
+        res.status(400);
+        next(error);
     }
 };
 
 // @desc    Update a sweet
 // @route   PUT /api/sweets/:id
 // @access  Protected
-export const updateSweet = async (req: Request, res: Response) => {
+export const updateSweet = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const sweet = await Sweet.findById(req.params.id);
         if (sweet) {
@@ -68,34 +69,36 @@ export const updateSweet = async (req: Request, res: Response) => {
             const updatedSweet = await sweet.save();
             res.json(updatedSweet);
         } else {
-            res.status(404).json({ message: 'Sweet not found' });
+            res.status(404);
+            throw new Error('Sweet not found');
         }
     } catch (error) {
-        res.status(500).json({ message: 'Server Error' });
+        next(error);
     }
 };
 
 // @desc    Delete a sweet
 // @route   DELETE /api/sweets/:id
 // @access  Admin
-export const deleteSweet = async (req: Request, res: Response) => {
+export const deleteSweet = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const sweet = await Sweet.findById(req.params.id);
         if (sweet) {
             await sweet.deleteOne(); // or findByIdAndDelete
             res.json({ message: 'Sweet removed' });
         } else {
-            res.status(404).json({ message: 'Sweet not found' });
+            res.status(404);
+            throw new Error('Sweet not found');
         }
     } catch (error) {
-        res.status(500).json({ message: 'Server Error' });
+        next(error);
     }
 };
 
 // @desc    Purchase a sweet (decrease quantity)
 // @route   POST /api/sweets/:id/purchase
 // @access  Protected
-export const purchaseSweet = async (req: Request, res: Response) => {
+export const purchaseSweet = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { quantity } = req.body;
         const sweet = await Sweet.findById(req.params.id);
@@ -106,20 +109,22 @@ export const purchaseSweet = async (req: Request, res: Response) => {
                 const updatedSweet = await sweet.save();
                 res.json({ message: 'Purchase successful', quantity: updatedSweet.quantity });
             } else {
-                res.status(400).json({ message: 'Not enough stock' });
+                res.status(400);
+                throw new Error('Not enough stock');
             }
         } else {
-            res.status(404).json({ message: 'Sweet not found' });
+            res.status(404);
+            throw new Error('Sweet not found');
         }
     } catch (error) {
-        res.status(500).json({ message: 'Server Error' });
+        next(error);
     }
 };
 
 // @desc    Restock a sweet (increase quantity)
 // @route   POST /api/sweets/:id/restock
 // @access  Admin
-export const restockSweet = async (req: Request, res: Response) => {
+export const restockSweet = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { quantity } = req.body;
         const sweet = await Sweet.findById(req.params.id);
@@ -129,9 +134,10 @@ export const restockSweet = async (req: Request, res: Response) => {
             const updatedSweet = await sweet.save();
             res.json({ message: 'Restock successful', quantity: updatedSweet.quantity });
         } else {
-            res.status(404).json({ message: 'Sweet not found' });
+            res.status(404);
+            throw new Error('Sweet not found');
         }
     } catch (error) {
-        res.status(500).json({ message: 'Server Error' });
+        next(error);
     }
 };
