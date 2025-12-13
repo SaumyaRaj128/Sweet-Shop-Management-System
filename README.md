@@ -61,6 +61,9 @@ The **Sweet Shop Management System** solves the core challenges of tracking peri
       PORT=5000
       MONGO_URI=your_mongodb_connection_string
       JWT_SECRET=your_jwt_secret_key
+      CLOUDINARY_CLOUD_NAME=your_cloud_name
+      CLOUDINARY_API_KEY=your_api_key
+      COUDINARY_API_SECRET=your_api_secret
       ```
 
 4.  **Create Admin User:**
@@ -119,6 +122,8 @@ The backend uses **Jest** and **Supertest** for unit and integration testing.
     npm test
     ```
 
+**Live Demo:** [CLICK HERE](https://sweet-shop-management-system-bfcz.vercel.app/)
+
 ## Screenshots
 *User View*
 <img width="1941" height="1129" alt="Screenshot 2025-12-13 180244" src="https://github.com/user-attachments/assets/78dafa1f-6d9f-4dab-8b3a-baed23cab1fb" />
@@ -130,6 +135,10 @@ The backend uses **Jest** and **Supertest** for unit and integration testing.
 
 *Inventory Management*
 <img width="1551" height="1157" alt="image" src="https://github.com/user-attachments/assets/e8000a8b-e5c5-465a-bafd-bdf494bcf651" />
+
+*Test Results*
+
+![WhatsApp Image 2025-12-14 at 00 18 40_8e8ef0fa](https://github.com/user-attachments/assets/5c9eadc1-cbf8-49fe-817e-374c2f047fe7)
 
 
 ## Backend Architecture
