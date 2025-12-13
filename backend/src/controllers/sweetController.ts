@@ -51,7 +51,11 @@ export const searchSweets = async (req: Request, res: Response, next: NextFuncti
 export const createSweet = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { name, category, price, quantity } = req.body;
-        const sweet = await Sweet.create({ name, category, price, quantity });
+        console.log('Request File:', (req as any).file);
+        console.log('Request Body:', req.body);
+        const image = (req as any).file ? (req as any).file.path : undefined;
+
+        const sweet = await Sweet.create({ name, category, price, quantity, image });
         res.status(201).json(sweet);
     } catch (error) {
         res.status(400);
@@ -70,6 +74,9 @@ export const updateSweet = async (req: Request, res: Response, next: NextFunctio
             sweet.category = req.body.category || sweet.category;
             sweet.price = req.body.price || sweet.price;
             sweet.quantity = req.body.quantity !== undefined ? req.body.quantity : sweet.quantity;
+            if ((req as any).file) {
+                sweet.image = (req as any).file.path;
+            }
 
             const updatedSweet = await sweet.save();
             res.json(updatedSweet);
@@ -111,6 +118,7 @@ export const purchaseSweet = async (req: Request, res: Response, next: NextFunct
         if (sweet) {
             if (sweet.quantity >= quantity) {
                 sweet.quantity -= quantity;
+                sweet.soldQuantity = (sweet.soldQuantity || 0) + quantity;
                 const updatedSweet = await sweet.save();
                 res.json({ message: 'Purchase successful', quantity: updatedSweet.quantity });
             } else {

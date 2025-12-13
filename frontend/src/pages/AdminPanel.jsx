@@ -11,12 +11,17 @@ export default function AdminPanel() {
     price: '',
     quantity: ''
   });
+  const [imageFile, setImageFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, files } = e.target;
+    if (name === 'image') {
+        setImageFile(files ? files[0] : null);
+    } else {
+        setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -24,9 +29,14 @@ export default function AdminPanel() {
     setLoading(true);
     setMessage({ type: '', text: '' });
     try {
-      await api.post('/sweets', formData);
+      const data = new FormData();
+      Object.keys(formData).forEach(key => data.append(key, formData[key]));
+      if (imageFile) data.append('image', imageFile);
+
+      await api.post('/sweets', data);
       setMessage({ type: 'success', text: 'Sweet added successfully!' });
       setFormData({ name: '', category: '', price: '', quantity: '' }); // Reset form
+      setImageFile(null);
       setTimeout(() => navigate('/'), 1500); // Redirect to dashboard
     } catch (error) {
       setMessage({ type: 'error', text: error.response?.data?.message || 'Failed to add sweet' });
@@ -80,6 +90,11 @@ export default function AdminPanel() {
                     <label className="text-sm font-semibold" style={{ marginBottom: '0.5rem', display: 'block' }}>Initial Quantity</label>
                     <input required type="number" name="quantity" value={formData.quantity} onChange={handleChange} className="input" min="0" placeholder="0" />
                 </div>
+            </div>
+
+            <div>
+                <label className="text-sm font-semibold" style={{ marginBottom: '0.5rem', display: 'block' }}>Image</label>
+                <input type="file" name="image" onChange={handleChange} className="input" accept="image/*" />
             </div>
 
             <button type="submit" disabled={loading} className="btn btn-primary" style={{ marginTop: '1rem' }}>

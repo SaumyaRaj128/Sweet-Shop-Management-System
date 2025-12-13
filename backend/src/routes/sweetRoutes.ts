@@ -1,17 +1,18 @@
 import { Router } from 'express';
 import { getSweets, createSweet, searchSweets, updateSweet, deleteSweet, purchaseSweet, restockSweet } from '../controllers/sweetController';
 import { protect, admin } from '../middleware/authMiddleware';
+import upload from '../middleware/uploadMiddleware';
 
 const router = Router();
 
 router.route('/')
     .get(protect, getSweets)
-    .post(protect, createSweet);
+    .post(protect, upload.single('image'), createSweet);
 
 router.get('/search', protect, searchSweets);
 
 router.route('/:id')
-    .put(protect, updateSweet)
+    .put(protect, upload.single('image'), updateSweet)
     .delete(protect, admin, deleteSweet);
 
 router.post('/:id/purchase', protect, purchaseSweet);

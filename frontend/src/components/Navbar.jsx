@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LogOut, ShoppingBag, User, PlusCircle } from 'lucide-react';
+import { LogOut, ShoppingBag, User, PlusCircle, LayoutDashboard } from 'lucide-react';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -26,6 +26,10 @@ export default function Navbar() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
           {user ? (
             <>
+              <Link to="/" className="btn btn-secondary" style={{ border: 'none', background: 'transparent' }}>
+                <LayoutDashboard size={20} />
+                Dashboard
+              </Link>
               {user.role === 'admin' && (
                 <Link to="/admin" className="btn btn-secondary" style={{ border: 'none', background: 'transparent' }}>
                   <PlusCircle size={20} />

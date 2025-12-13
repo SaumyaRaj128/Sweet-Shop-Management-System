@@ -9,6 +9,8 @@ export default function SweetForm({ initialData = null, onSubmit, onCancel }) {
     quantity: ''
   });
 
+  const [imageFile, setImageFile] = useState(null);
+
   useEffect(() => {
     if (initialData) {
       setFormData({
@@ -21,13 +23,25 @@ export default function SweetForm({ initialData = null, onSubmit, onCancel }) {
   }, [initialData]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, files } = e.target;
+    if (name === 'image') {
+        setImageFile(files ? files[0] : null);
+    } else {
+        setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    const data = new FormData();
+    data.append('name', formData.name);
+    data.append('category', formData.category);
+    data.append('price', formData.price);
+    data.append('quantity', formData.quantity);
+    if (imageFile) {
+        data.append('image', imageFile);
+    }
+    onSubmit(data);
   };
 
   return (
@@ -59,6 +73,10 @@ export default function SweetForm({ initialData = null, onSubmit, onCancel }) {
                     <label className="text-sm font-semibold">Quantity</label>
                     <input required type="number" name="quantity" value={formData.quantity} onChange={handleChange} className="input" min="0" />
                 </div>
+            </div>
+            <div>
+                <label className="text-sm font-semibold">Image</label>
+                <input type="file" name="image" onChange={handleChange} className="input" accept="image/*" />
             </div>
             
             <button type="submit" className="btn btn-primary" style={{ marginTop: '1rem' }}>
