@@ -120,12 +120,17 @@ The backend uses **Jest** and **Supertest** for unit and integration testing.
     ```
 
 ## Screenshots
+*User View*
+<img width="1941" height="1129" alt="Screenshot 2025-12-13 180244" src="https://github.com/user-attachments/assets/78dafa1f-6d9f-4dab-8b3a-baed23cab1fb" />
 
-*Placeholder: Dashboard View*
-![Dashboard Screenshot](path/to/screenshot1.png)
+*Dashboard View*
+<img width="2057" height="1236" alt="Screenshot 2025-12-13 180351" src="https://github.com/user-attachments/assets/bcc0a1b3-1940-4653-998c-738f7e040b61" />
+<img width="1534" height="1161" alt="Screenshot 2025-12-13 180402" src="https://github.com/user-attachments/assets/214a4329-d679-43c6-90e3-0b41dc812e1c" />
 
-*Placeholder: Inventory Management*
-![Inventory Screenshot](path/to/screenshot2.png)
+
+*Inventory Management*
+<img width="1551" height="1157" alt="image" src="https://github.com/user-attachments/assets/e8000a8b-e5c5-465a-bafd-bdf494bcf651" />
+
 
 ## Backend Architecture
 
