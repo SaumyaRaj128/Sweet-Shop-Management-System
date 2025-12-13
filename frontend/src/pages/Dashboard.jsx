@@ -172,7 +172,9 @@ export default function Dashboard() {
                                     <th style={{ padding: '1rem', textAlign: 'left', fontSize: '0.875rem', color: '#6b7280' }}>Category</th>
                                     <th style={{ padding: '1rem', textAlign: 'left', fontSize: '0.875rem', color: '#6b7280' }}>Price</th>
                                     <th style={{ padding: '1rem', textAlign: 'left', fontSize: '0.875rem', color: '#6b7280' }}>Stock</th>
-                                    <th style={{ padding: '1rem', textAlign: 'left', fontSize: '0.875rem', color: '#6b7280' }}>Sold</th>
+                                    {user.role === 'admin' && (
+                                        <th style={{ padding: '1rem', textAlign: 'left', fontSize: '0.875rem', color: '#6b7280' }}>Sold</th>
+                                    )}
                                     <th style={{ padding: '1rem', textAlign: 'right', fontSize: '0.875rem', color: '#6b7280' }}>Actions</th>
                                 </tr>
                             </thead>
@@ -205,7 +207,9 @@ export default function Dashboard() {
                                                 {sweet.quantity} left
                                             </span>
                                         </td>
-                                        <td style={{ padding: '1rem', color: '#6b7280' }}>{sweet.soldQuantity || 0}</td>
+                                        {user.role === 'admin' && (
+                                            <td style={{ padding: '1rem', color: '#6b7280' }}>{sweet.soldQuantity || 0}</td>
+                                        )}
                                         <td style={{ padding: '1rem', textAlign: 'right' }}>
                                             <SweetCard 
                                                 sweet={sweet} 

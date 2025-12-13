@@ -86,7 +86,7 @@ export default function SweetCard({ sweet, onUpdate, onDelete, onPurchase, varia
                 {sweet.category}
             </span>
         </div>
-        {(sweet.soldQuantity > 0) && (
+        {(isAdmin && sweet.soldQuantity > 0) && (
              <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
                 <TrendingUp size={14} className="text-green-500" />
                 <span>{sweet.soldQuantity} sold</span>
