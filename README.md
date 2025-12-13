@@ -150,6 +150,11 @@ The backend is built with Node.js, Express, and MongoDB. Below is an analysis of
     - `purchaseSweet`: Decrements sweet quantity (Basic logic only, no order record).
     - `restockSweet`: Increments sweet quantity (Admin only).
 
+#### 3. Image Upload
+- **Cloud Integration**: Uses **Cloudinary** for scalable image storage.
+- **Implementation**: Utilizes `multer` and `multer-storage-cloudinary` for handling `multipart/form-data` uploads.
+- **Status**: Basic implementation. While functional for adding visual flair to the inventory, currently it processes uploads directly. Future improvements could include image resizing, optimization before upload, and better error handling for invalid file types.
+
 ## My AI Usage
 
 In developing this project, I utilized AI tools to assist with specific aspects of the development process, ensuring that the core logic and implementation remained my own work.

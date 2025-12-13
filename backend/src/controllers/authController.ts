@@ -47,7 +47,6 @@ export const register = async (req: Request, res: Response, next: NextFunction):
 export const login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { username, password } = req.body;
-        console.log("login request", { username });
 
         if (!username || !password) {
             res.status(400);

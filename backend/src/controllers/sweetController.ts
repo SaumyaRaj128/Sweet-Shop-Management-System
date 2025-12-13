@@ -51,8 +51,6 @@ export const searchSweets = async (req: Request, res: Response, next: NextFuncti
 export const createSweet = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { name, category, price, quantity } = req.body;
-        console.log('Request File:', (req as any).file);
-        console.log('Request Body:', req.body);
         const image = (req as any).file ? (req as any).file.path : undefined;
 
         const sweet = await Sweet.create({ name, category, price, quantity, image });

@@ -1,7 +1,7 @@
 import request from 'supertest';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-dotenv.config();
+dotenv.config({ quiet: true } as any);
 import app from '../src/app';
 import { User } from '../src/models/User';
 

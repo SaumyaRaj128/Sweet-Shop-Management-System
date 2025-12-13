@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { User } from '../models/User';
 import { connectDB } from '../config/database';
 
-dotenv.config();
+dotenv.config({ quiet: true } as any);
 
 const createAdmin = async () => {
     try {
@@ -11,7 +11,7 @@ const createAdmin = async () => {
 
         const adminExists = await User.findOne({ username: 'admin' });
         if (adminExists) {
-            console.log('Admin user already exists');
+            // console.log('Admin user already exists');
             return;
         }
 
@@ -21,11 +21,11 @@ const createAdmin = async () => {
             role: 'admin'
         });
 
-        console.log('Admin user created successfully');
-        console.log('Username: admin');
-        console.log('Password: password123');
+        // console.log('Admin user created successfully');
+        // console.log('Username: admin');
+        // console.log('Password: password123');
     } catch (error) {
-        console.error('Error creating admin:', error);
+        // console.error('Error creating admin:', error);
     } finally {
         await mongoose.disconnect();
         process.exit(0);
