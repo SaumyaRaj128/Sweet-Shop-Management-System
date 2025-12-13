@@ -11,12 +11,19 @@ export default function Dashboard() {
   const [sweets, setSweets] = useState([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
   const [editingSweet, setEditingSweet] = useState(null);
   
   const fetchSweets = async (query = '') => {
     setLoading(true);
     try {
-      const endpoint = query ? `/sweets/search?q=${query}` : '/sweets';
+      const params = new URLSearchParams();
+      if (query) params.append('q', query);
+      if (minPrice) params.append('minPrice', minPrice);
+      if (maxPrice) params.append('maxPrice', maxPrice);
+
+      const endpoint = params.toString() ? `/sweets/search?${params.toString()}` : '/sweets';
       const { data } = await api.get(endpoint);
       setSweets(data);
     } catch (error) {
@@ -59,21 +66,44 @@ export default function Dashboard() {
 
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
-        <h1 style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--text-main)' }}>Our Sweets</h1>
-        
-        <form onSubmit={handleSearch} style={{ display: 'flex', gap: '0.5rem', flex: 1, maxWidth: '400px' }}>
-          <input 
-            type="text" 
-            className="input" 
-            placeholder="Search for sweets..." 
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <button type="submit" className="btn btn-primary" style={{ padding: '0.75rem' }}>
-            <Search size={20} />
-          </button>
-        </form>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+          <h1 style={{ fontSize: '2rem', fontWeight: '700', color: 'var(--text-main)' }}>Our Sweets</h1>
+          
+          <form onSubmit={handleSearch} style={{ display: 'flex', gap: '0.5rem', flex: 1, maxWidth: '600px', flexWrap: 'wrap' }}>
+            <div style={{ flex: 2, minWidth: '200px' }}>
+                <input 
+                  type="text" 
+                  className="input" 
+                  placeholder="Search by name or category..." 
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  style={{ width: '100%' }}
+                />
+            </div>
+            <div style={{ display: 'flex', gap: '0.5rem', flex: 1 }}>
+                <input 
+                  type="number" 
+                  className="input" 
+                  placeholder="Min ₹" 
+                  value={minPrice}
+                  onChange={(e) => setMinPrice(e.target.value)}
+                  style={{ minWidth: '80px' }}
+                />
+                <input 
+                  type="number" 
+                  className="input" 
+                  placeholder="Max ₹" 
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(e.target.value)}
+                  style={{ minWidth: '80px' }}
+                />
+            </div>
+            <button type="submit" className="btn btn-primary" style={{ padding: '0.75rem' }}>
+              <Search size={20} />
+            </button>
+          </form>
+        </div>
       </div>
 
       {loading ? (

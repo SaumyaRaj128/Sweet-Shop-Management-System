@@ -22,11 +22,16 @@ export const searchSweets = async (req: Request, res: Response, next: NextFuncti
         let query: any = {};
 
         if (q) {
-            query.name = { $regex: q, $options: 'i' };
+            query.$or = [
+                { name: { $regex: q, $options: 'i' } },
+                { category: { $regex: q, $options: 'i' } }
+            ];
         }
+
         if (category) {
             query.category = category;
         }
+
         if (minPrice || maxPrice) {
             query.price = {};
             if (minPrice) query.price.$gte = Number(minPrice);
